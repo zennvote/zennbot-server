@@ -43,7 +43,7 @@ export const getSheetsInfo = async (name: string): Promise<null | SheetsInfo> =>
   return getSheetsInfoFromRow(row);
 }
 
-const updateSheetsInfo = async (name: string, dto: UpdateSheetsInfoDto) => {
+export const updateSheetsInfo = async (name: string, dto: UpdateSheetsInfoDto) => {
   const spreadsheetId = process.env.REWARDS_SHEETS_ID;
   const sheetIndex = await getViewerIndex(name);
   if (sheetIndex === undefined) {

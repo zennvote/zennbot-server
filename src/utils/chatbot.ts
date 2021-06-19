@@ -6,7 +6,7 @@ export type ChatEvent = { channel: string, tags: ChatUserstate, command: string,
 const COMMANDS: { [key: string]: (payload: ChatEvent) => any } = {
   조각: viewersCommands.showSelf,
   주사위: viewersCommands.rollDice,
-  // 신청: 'viewers.request-song',
+  신청: viewersCommands.requestSong,
 
   // 지급: 'managers.add-rewards',
   // 칭호: 'managers.set-prefix',
@@ -39,7 +39,6 @@ export const initializeChatbot = async () => {
     if (message.startsWith('!젠 ')) {
       message = message.replace('젠 ', '');
     }
-    console.log(message);
 
     const [unformattedCommand, ...args] = message.split(' ');
     const command = unformattedCommand.slice(1);
