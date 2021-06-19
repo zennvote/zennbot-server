@@ -5,7 +5,7 @@ export type ChatEvent = { channel: string, tags: ChatUserstate, command: string,
 
 const COMMANDS: { [key: string]: (payload: ChatEvent) => any } = {
   조각: viewersCommands.showSelf,
-  // 주사위: 'viewers.roll-dice',
+  주사위: viewersCommands.rollDice,
   // 신청: 'viewers.request-song',
 
   // 지급: 'managers.add-rewards',
