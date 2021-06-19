@@ -18,7 +18,7 @@ export const initializeSheetsService = async () => {
   });
 };
 
-const getSheetsInfos = async (): Promise<SheetsInfo[] | null> => {
+export const getSheetsInfos = async (): Promise<SheetsInfo[] | null> => {
   const sheets = await getSheets();
   if (!sheets) {
     return null;
@@ -29,7 +29,7 @@ const getSheetsInfos = async (): Promise<SheetsInfo[] | null> => {
   return result;
 };
 
-const getSheetsInfo = async (name: string): Promise<null | SheetsInfo> => {
+export const getSheetsInfo = async (name: string): Promise<null | SheetsInfo> => {
   const sheets = await getSheets();
   if (!sheets) {
     return null;
