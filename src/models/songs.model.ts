@@ -1,4 +1,6 @@
 import { io } from "..";
+import { redis } from "..";
+import * as redisUtil from '../utils/redis';
 
 export default class Song {
   constructor (
@@ -15,17 +17,22 @@ export enum RequestType {
   manual = 'manual',
 }
 
-let removedSongList: Song[] = [];
-let songList: Song[] = [];
-
-export const getSongList = () => songList;
+export const getSongList = () => redisUtil.getSongList('songs/list');
+export const getRemovedSongList = () => redisUtil.getSongList('songs/removed-list');
 
 const setSongList = (songs: Song[]) => {
-  songList = songs;
+  redis.set('songs/list', JSON.stringify(songs));
   io.emit('songs.updated', songs);
 };
 
+const setRemovedSongList = (songs: Song[]) => {
+  redis.set('songs/removed-list', JSON.stringify(songs));
+}
+
 export const isCooltime = async (username: string) => {
+  const songList = await getSongList();
+  const removedSongList = await getRemovedSongList();
+
   return [...removedSongList, ...songList]
     .reverse()
     .slice(0, 4)
@@ -33,15 +40,24 @@ export const isCooltime = async (username: string) => {
 };
 
 export const isMaxSong = async () => {
+  const songList = await getSongList();
+
   return songList.length >= 12;
 }
 
-export const appendSong = async (song: Song) => setSongList([...songList, song]);
+export const appendSong = async (song: Song) => {
+  const songList = await getSongList();
+  setSongList([...songList, song]);
+}
 
 export const deleteSong = async (index: number = 0) => {
+  const songList = await getSongList();
+  const removedSongList = await getRemovedSongList();
+
   const current = [...songList];
   const deleted = current.splice(index, 1)[0];
-  removedSongList = [...removedSongList, deleted];
+
+  setRemovedSongList([...removedSongList, deleted]);
   setSongList(current);
 
   return deleted;

@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import Redis from 'redis';
 import { Server } from 'socket.io';
 
 import SongsRouter from './controllers/songs.controller';
@@ -8,6 +9,7 @@ import SongsRouter from './controllers/songs.controller';
 import { initializeSheetsService } from './utils/sheets';
 import { initializeChatbot } from './utils/chatbot';
 import { getSongList } from './models/songs.model';
+import { client } from 'tmi.js';
 
 dotenv.config();
 
@@ -26,10 +28,11 @@ const initializers = [
 ];
 
 export const io = new Server();
+export const redis = Redis.createClient();
 
 io.on('connection', (socket: any) => {
-  socket.on('songs.update', () => {
-    io.emit('songs.updated', getSongList());
+  socket.on('songs.update', async () => {
+    io.emit('songs.updated', await getSongList());
   });
   console.log(`connected: ${socket.id}`);
 });
