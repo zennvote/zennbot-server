@@ -51,8 +51,12 @@ export const requestSong = async (payload: ChatEvent) => {
     throw new Error('No tag on chat: username | display-name');
   }
 
-  if (await songModel.isCooltime(requestor)) {
+  if (await songModel.isCooltime(requestor) && false) {
     sendMessage(payload.channel, '아직 곡을 신청할 수 없어요! 이전에 신청한 곡 이후로 최소 4개의 곡이 신청되어야 해요.');
+    return;
+  }
+  if (await songModel.isMaxSong()) {
+    sendMessage(payload.channel, '12개의 곡이 신청되면 더이상 신청할 수 없어요! 잠시 후에 신청해 주세요.');
     return;
   }
 

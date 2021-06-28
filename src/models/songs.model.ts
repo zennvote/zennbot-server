@@ -1,3 +1,5 @@
+import { io } from "..";
+
 export default class Song {
   constructor (
     public title: string,
@@ -16,6 +18,13 @@ export enum RequestType {
 let removedSongList: Song[] = [];
 let songList: Song[] = [];
 
+export const getSongList = () => songList;
+
+const setSongList = (songs: Song[]) => {
+  songList = songs;
+  io.emit('songs.updated', songs);
+};
+
 export const isCooltime = async (username: string) => {
   return [...removedSongList, ...songList]
     .reverse()
@@ -23,6 +32,17 @@ export const isCooltime = async (username: string) => {
     .some((song) => song.requestor === username);
 };
 
-export const appendSong = async (song: Song) => {
-  songList = [...songList, song];
+export const isMaxSong = async () => {
+  return songList.length >= 12;
+}
+
+export const appendSong = async (song: Song) => setSongList([...songList, song]);
+
+export const deleteSong = async (index: number = 0) => {
+  const current = [...songList];
+  const deleted = current.splice(index, 1)[0];
+  removedSongList = [...removedSongList, deleted];
+  setSongList(current);
+
+  return deleted;
 };
