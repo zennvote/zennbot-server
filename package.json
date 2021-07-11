@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.12",
+    "@types/mongoose": "^5.11.97",
     "@types/node": "^15.12.2",
     "@types/redis": "^2.8.30",
     "@types/tmi.js": "^1.7.1",
@@ -19,6 +20,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "googleapis": "^77.0.0",
+    "mongoose": "^5.13.2",
     "redis": "^3.1.2",
     "socket.io": "^4.1.2",
     "tmi.js": "^1.8.3"

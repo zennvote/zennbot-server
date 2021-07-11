@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import Redis from 'redis';
 import { Server } from 'socket.io';
+import mongoose from 'mongoose';
 
 import SongsRouter from './controllers/songs.controller';
 
@@ -38,6 +39,14 @@ io.on('connection', (socket: any) => {
   });
   console.log(`connected: ${socket.id}`);
 });
+
+mongoose.connect(process.env.MONGOOSE_URI ?? '', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('connected to ', process.env.MONGOOSE_URL);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 
 Promise.all(initializers)
   .then(() => {

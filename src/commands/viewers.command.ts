@@ -1,3 +1,4 @@
+import { getManagers } from '../models/managers.model';
 import Song, * as songModel from '../models/songs.model';
 import Viewer, * as viewerModel from '../models/viewer.model';
 import { ChatEvent, sendMessage } from '../utils/chatbot';
@@ -80,4 +81,35 @@ export const requestSong = async (payload: ChatEvent) => {
 
   const message = `${requestorName}님의 ${requestType} ${requestType === songModel.RequestType.ticket ? '1장' : '3개'}를 사용하여 곡을 신청했어요!`;
   sendMessage(payload.channel, message);
+};
+
+export const setRewards = async (payload: ChatEvent) => {
+  const managers = await getManagers();
+  if (!managers.some((manager) => manager.username === payload.tags.username)) {
+    sendMessage(payload.channel, '권한이 없습니다!')
+    return;
+  }
+  if (payload.args.length < 2) {
+    sendMessage(payload.channel, '잘못된 명령어 형식입니다. 다시 한번 확인해주세요!');
+    return;
+  }
+
+  const [inputType, name, inputPoint] = payload.args;
+  if (parseInt(inputPoint, 10) === NaN) {
+    sendMessage(payload.channel, '갯수는 숫자로 입력해주세요!');
+    return;
+  }
+  const type = inputType === '곡' ? viewerModel.RewardType.Ticket : viewerModel.RewardType.TicketPiece;
+  const point = parseInt(inputPoint, 10) || 1;
+
+  const viewer = await viewerModel.findByName(name);
+  if (viewer === null) {
+    sendMessage(payload.channel, '존재하지 않는 시청자입니다.');
+    return;
+  }
+
+  const updatedPoint = (inputType === '곡' ? viewer.ticket : viewer.ticketPiece) + point;
+  await viewerModel.setReward(name, type, updatedPoint);
+
+  sendMessage(payload.channel, `${name}님에게 ${inputType} ${point} 개를 지급하였습니다.`);
 };

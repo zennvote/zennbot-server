@@ -8,7 +8,7 @@ const COMMANDS: { [key: string]: (payload: ChatEvent) => any } = {
   주사위: viewersCommands.rollDice,
   신청: viewersCommands.requestSong,
 
-  // 지급: 'managers.add-rewards',
+  지급: viewersCommands.setRewards,
   // 칭호: 'managers.set-prefix',
 };
 
