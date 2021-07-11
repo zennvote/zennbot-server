@@ -9,7 +9,6 @@ import SongsRouter from './controllers/songs.controller';
 import { initializeSheetsService } from './utils/sheets';
 import { initializeChatbot } from './utils/chatbot';
 import { getSongList } from './models/songs.model';
-import { client } from 'tmi.js';
 
 dotenv.config();
 
@@ -29,6 +28,9 @@ const initializers = [
 
 export const io = new Server();
 export const redis = Redis.createClient();
+
+redis.set('songs/removed-list', '[]');
+redis.set('songs/list', '[]');
 
 io.on('connection', (socket: any) => {
   socket.on('songs.update', async () => {

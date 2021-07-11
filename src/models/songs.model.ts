@@ -56,6 +56,9 @@ export const deleteSong = async (index: number = 0) => {
 
   const current = [...songList];
   const deleted = current.splice(index, 1)[0];
+  if (!deleted) {
+    return null;
+  }
 
   setRemovedSongList([...removedSongList, deleted]);
   setSongList(current);
