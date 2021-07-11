@@ -6,7 +6,15 @@ export const getSongList = (key: string) => new Promise<Song[]>((resolve) => {
     if (err || !reply) {
       return resolve([]);
     }
-    console.log(reply);
     return resolve(JSON.parse(reply) as Song[]);
   })
+});
+
+export const getFreemode = () => new Promise<boolean>((resolve) => {
+  redis.get('songs/freemode', (err, reply) => {
+    if (err || !reply) {
+      return resolve(false);
+    }
+    return resolve(JSON.parse(reply) as boolean);
+  });
 });

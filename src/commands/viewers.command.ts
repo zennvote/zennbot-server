@@ -2,6 +2,7 @@ import { getManagers } from '../models/managers.model';
 import Song, * as songModel from '../models/songs.model';
 import Viewer, * as viewerModel from '../models/viewer.model';
 import { ChatEvent, sendMessage } from '../utils/chatbot';
+import { getFreemode } from '../utils/redis';
 import { updateSheetsInfo } from '../utils/sheets';
 
 export const showSelf = async (payload: ChatEvent) => {
@@ -59,6 +60,12 @@ export const requestSong = async (payload: ChatEvent) => {
   if (await songModel.isMaxSong()) {
     sendMessage(payload.channel, '12개의 곡이 신청되면 더이상 신청할 수 없어요! 잠시 후에 신청해 주세요.');
     return;
+  }
+
+  const isFreemode = await getFreemode();
+  if (isFreemode) {
+    await songModel.appendSong({ title, requestor, requestorName, requestType: songModel.RequestType.freemode });
+    sendMessage(payload.channel, `🔔 골든벨🔔 ${requestorName}님의 곡을 무료로 신청했어요!`)
   }
 
   const viewer = await viewerModel.findByName(requestorName);

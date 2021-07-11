@@ -14,6 +14,7 @@ export default class Song {
 export enum RequestType {
   ticket = '티켓',
   ticketPiece = '조각',
+  freemode = '골든벨',
   manual = 'manual',
 }
 
@@ -49,6 +50,9 @@ export const appendSong = async (song: Song) => {
   const songList = await getSongList();
   setSongList([...songList, song]);
 }
+
+export const isFreemode = async () => await redisUtil.getFreemode();
+export const setFreemode = async (value: boolean) => redis.set('songs/freemode', value.toString());
 
 export const deleteSong = async (index: number = 0) => {
   const songList = await getSongList();
