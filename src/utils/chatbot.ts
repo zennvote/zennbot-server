@@ -4,7 +4,7 @@ import * as viewersCommands from '../commands/viewers.command';
 export type ChatEvent = { channel: string, tags: ChatUserstate, command: string, args: string[] };
 
 const COMMANDS: { [key: string]: (payload: ChatEvent) => any } = {
-  조각: viewersCommands.showSelf,
+  조각: viewersCommands.showRewards,
   주사위: viewersCommands.rollDice,
   신청: viewersCommands.requestSong,
 

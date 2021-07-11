@@ -5,8 +5,8 @@ import { ChatEvent, sendMessage } from '../utils/chatbot';
 import { getFreemode } from '../utils/redis';
 import { updateSheetsInfo } from '../utils/sheets';
 
-export const showSelf = async (payload: ChatEvent) => {
-  const name = payload.tags['display-name'];
+export const showRewards = async (payload: ChatEvent) => {
+  const name = payload.args.length ? payload.args[0] : payload.tags['display-name'];
   if (!name) {
     throw new Error('No tag on chat: display-name');
   }
