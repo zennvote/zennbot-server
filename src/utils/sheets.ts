@@ -63,6 +63,36 @@ export const updateSheetsInfo = async (name: string, dto: UpdateSheetsInfoDto) =
   });
 }
 
+export const addSheetsInfo = async (name: string) => {
+  const spreadsheetId = process.env.REWARDS_SHEETS_ID;
+
+  const { data: { sheets: sheet } } = await service.spreadsheets.get({ spreadsheetId });
+  if (!sheet) {
+    return null;
+  }
+
+  const { rowCount } = sheet[0].properties?.gridProperties ?? {};
+  if (!rowCount) {
+    return null;
+  }
+
+  const rangeMap = { name: 'B', tickets: 'C', ticketPieces: 'D', prefix: 'E' } as any;
+  const sheetsInfo = { name, tickets: 0, ticketPieces: 0, prefix: '' };
+  const data = Object.entries(sheetsInfo).map(([key, value]) => ({
+    range: `시트1!${rangeMap[key]}${rowCount}`,
+    values: [[`${value}`]],
+  }));
+
+  await service.spreadsheets.batchUpdate({
+    spreadsheetId,
+    requestBody: { requests: [{ appendDimension: { sheetId: 0, dimension: 'ROWS', length: 1 } }] },
+  });
+  return service.spreadsheets.values.batchUpdate({
+    spreadsheetId,
+    requestBody: { data, valueInputOption: 'RAW' },
+  });
+}
+
 const getSheets = async () => {
   const spreadsheetId = process.env.REWARDS_SHEETS_ID;
   const range = process.env.REWARDS_SHEETS_FULL_RANGE;

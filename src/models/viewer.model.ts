@@ -1,4 +1,4 @@
-import { getSheetsInfo, SheetsInfo, updateSheetsInfo } from "../utils/sheets";
+import { addSheetsInfo, getSheetsInfo, SheetsInfo, updateSheetsInfo } from "../utils/sheets";
 
 export enum RewardType { TicketPiece, Ticket };
 
@@ -31,6 +31,8 @@ export const setReward = async (name: string, type: RewardType, value: number) =
 }
 
 export const setPrefix = async (name: string, prefix: string) => await updateSheetsInfo(name, { prefix });
+
+export const create = async (name: string) => await addSheetsInfo(name);
 
 const getViewerFromSheetsInfo = (sheetsInfo: SheetsInfo): Viewer => {
   return {

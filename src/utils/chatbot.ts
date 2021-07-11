@@ -10,6 +10,7 @@ const COMMANDS: { [key: string]: (payload: ChatEvent) => any } = {
 
   지급: viewersCommands.setRewards,
   칭호: viewersCommands.setPrefix,
+  생성: viewersCommands.createViewer,
 };
 
 let client: Client;

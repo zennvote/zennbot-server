@@ -139,3 +139,21 @@ export const setPrefix = async (payload: ChatEvent) => {
   await viewerModel.setPrefix(target, prefix);
   sendMessage(payload.channel, `${target}님의 칭호를 [${prefix}]로 설정했어요!`);
 };
+
+export const createViewer = async (payload: ChatEvent) => {
+  const managers = await getManagers();
+  if (!managers.some((manager) => manager.username === payload.tags.username)) {
+    sendMessage(payload.channel, '권한이 없습니다!')
+    return;
+  }
+
+  if (payload.args.length === 0) {
+    sendMessage(payload.channel, '이름을 입력해주세요');
+    return;
+  }
+
+  const [name] = payload.args;
+  
+  await viewerModel.create(name);
+  sendMessage(payload.channel, `환영합니다 🎉 ${name}님이 신규 유저로 등록되었어요!`);
+};
