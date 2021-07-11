@@ -24,11 +24,13 @@ export const findByName = async (name: string) => {
 
 export const setReward = async (name: string, type: RewardType, value: number) => {
   if (type === RewardType.Ticket) {
-    updateSheetsInfo(name, { tickets: value });
+    await updateSheetsInfo(name, { tickets: value });
   } else if (type === RewardType.TicketPiece) {
-    updateSheetsInfo(name, { ticketPieces: value });
+    await updateSheetsInfo(name, { ticketPieces: value });
   }
 }
+
+export const setPrefix = async (name: string, prefix: string) => await updateSheetsInfo(name, { prefix });
 
 const getViewerFromSheetsInfo = (sheetsInfo: SheetsInfo): Viewer => {
   return {

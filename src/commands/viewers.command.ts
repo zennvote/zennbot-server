@@ -113,3 +113,22 @@ export const setRewards = async (payload: ChatEvent) => {
 
   sendMessage(payload.channel, `${name}님에게 ${inputType} ${point} 개를 지급하였습니다.`);
 };
+
+export const setPrefix = async (payload: ChatEvent) => {
+  const managers = await getManagers();
+  if (!managers.some((manager) => manager.username === payload.tags.username)) {
+    sendMessage(payload.channel, '권한이 없습니다!')
+    return;
+  }
+
+  if (payload.args.length < 2) {
+    sendMessage(payload.channel, '잘못된 명령어 형식이에요!');
+    return;
+  }
+  
+  const [target, ...prefixWords] = payload.args;
+  const prefix = prefixWords.join(' ');
+
+  await viewerModel.setPrefix(target, prefix);
+  sendMessage(payload.channel, `${target}님의 칭호를 [${prefix}]로 설정했어요!`);
+};

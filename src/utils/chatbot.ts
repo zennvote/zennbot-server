@@ -9,7 +9,7 @@ const COMMANDS: { [key: string]: (payload: ChatEvent) => any } = {
   신청: viewersCommands.requestSong,
 
   지급: viewersCommands.setRewards,
-  // 칭호: 'managers.set-prefix',
+  칭호: viewersCommands.setPrefix,
 };
 
 let client: Client;
