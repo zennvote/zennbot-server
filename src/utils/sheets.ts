@@ -4,7 +4,7 @@ import { google, sheets_v4 } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 
 export type SheetsInfo = { name: string, prefix?: string, tickets: number, ticketPieces: number };
-export type UpdateSheetsInfoDto = { tickets?: number,  ticketPieces?: number, prefix?: string };
+export type UpdateSheetsInfoDto = { tickets?: number, ticketPieces?: number, prefix?: string };
 
 let service: sheets_v4.Sheets;
 export const initializeSheetsService = async () => {
@@ -14,7 +14,7 @@ export const initializeSheetsService = async () => {
   }
   const credentials = JSON.parse(readFileSync(credentialsPath, 'utf8'));
   authorize(credentials).then((auth: any) => {
-    service = google.sheets({ auth: auth, version: 'v4' });
+    service = google.sheets({ auth, version: 'v4' });
   });
 };
 
@@ -41,7 +41,7 @@ export const getSheetsInfo = async (name: string): Promise<null | SheetsInfo> =>
   }
 
   return getSheetsInfoFromRow(row);
-}
+};
 
 export const updateSheetsInfo = async (name: string, dto: UpdateSheetsInfoDto) => {
   const spreadsheetId = process.env.REWARDS_SHEETS_ID;
@@ -61,7 +61,7 @@ export const updateSheetsInfo = async (name: string, dto: UpdateSheetsInfoDto) =
     spreadsheetId,
     requestBody: { data, valueInputOption: 'RAW' },
   });
-}
+};
 
 const getSheets = async () => {
   const spreadsheetId = process.env.REWARDS_SHEETS_ID;
@@ -79,7 +79,7 @@ const getSheets = async () => {
   });
 
   return response.data.values;
-}
+};
 
 const getViewerIndex = async (name: string): Promise<number | undefined> => {
   const sheets = await getSheets();
@@ -93,7 +93,7 @@ const getViewerIndex = async (name: string): Promise<number | undefined> => {
     return undefined;
   }
   return result;
-}
+};
 
 const authorize = async (credentials: any): Promise<OAuth2Client> => {
   const tokenPath = process.env.SHEETS_TOKEN_PATH;
@@ -111,7 +111,7 @@ const authorize = async (credentials: any): Promise<OAuth2Client> => {
   } catch (e) {
     return await getNewToken(oAuth2Client);
   }
-}
+};
 
 const getNewToken = async (oAuth2Client: OAuth2Client): Promise<OAuth2Client> => {
   const tokenPath = process.env.SHEETS_TOKEN_PATH;
@@ -149,10 +149,12 @@ const getNewToken = async (oAuth2Client: OAuth2Client): Promise<OAuth2Client> =>
       });
     });
   });
-}
+};
 
 const getSheetsInfoFromRow = (row: any[]): SheetsInfo => {
   const [name, tickets, ticketPieces, prefix] = row;
 
-  return { name, prefix, tickets: parseInt(tickets, 10), ticketPieces: parseInt(ticketPieces, 10) };
-}
+  return {
+    name, prefix, tickets: parseInt(tickets, 10), ticketPieces: parseInt(ticketPieces, 10),
+  };
+};

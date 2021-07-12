@@ -47,7 +47,7 @@ export const requestSong = async (payload: ChatEvent) => {
   const title = payload.args.join(' ');
   const requestor = payload.tags.username;
   const requestorName = payload.tags['display-name'];
-  
+
   if (!requestor || !requestorName) {
     throw new Error('No tag on chat: username | display-name');
   }
@@ -72,12 +72,14 @@ export const requestSong = async (payload: ChatEvent) => {
   } else if (ticketPiece > 2) {
     updateSheetsInfo(requestorName, { ticketPieces: ticketPiece - 3 });
   } else {
-    sendMessage( payload.channel, '포인트가 부족해요! =젠 조각 명령어로 보유 포인트를 확인해주세요~');
+    sendMessage(payload.channel, '포인트가 부족해요! =젠 조각 명령어로 보유 포인트를 확인해주세요~');
     return;
   }
 
   const requestType = ticket > 0 ? songModel.RequestType.ticket : songModel.RequestType.ticketPiece;
-  await songModel.appendSong({ title, requestor, requestorName, requestType });
+  await songModel.appendSong({
+    title, requestor, requestorName, requestType,
+  });
 
   const message = `${requestorName}님의 ${requestType} ${requestType === songModel.RequestType.ticket ? '1장' : '3개'}를 사용하여 곡을 신청했어요!`;
   sendMessage(payload.channel, message);
@@ -86,7 +88,7 @@ export const requestSong = async (payload: ChatEvent) => {
 export const setRewards = async (payload: ChatEvent) => {
   const managers = await getManagers();
   if (!managers.some((manager) => manager.username === payload.tags.username)) {
-    sendMessage(payload.channel, '권한이 없습니다!')
+    sendMessage(payload.channel, '권한이 없습니다!');
     return;
   }
   if (payload.args.length < 2) {

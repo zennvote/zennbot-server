@@ -1,5 +1,5 @@
-import { redis } from "..";
-import Song from "../models/songs.model";
+import { redis } from '..';
+import Song from '../models/songs.model';
 
 export const getSongList = (key: string) => new Promise<Song[]>((resolve) => {
   redis.get(key, (err, reply) => {
@@ -8,5 +8,5 @@ export const getSongList = (key: string) => new Promise<Song[]>((resolve) => {
     }
     console.log(reply);
     return resolve(JSON.parse(reply) as Song[]);
-  })
+  });
 });

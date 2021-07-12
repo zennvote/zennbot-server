@@ -1,9 +1,9 @@
-import { io } from "..";
-import { redis } from "..";
+import { io, redis } from '..';
+
 import * as redisUtil from '../utils/redis';
 
 export default class Song {
-  constructor (
+  constructor(
     public title: string,
     public requestor: string,
     public requestorName: string,
@@ -27,7 +27,7 @@ const setSongList = (songs: Song[]) => {
 
 const setRemovedSongList = (songs: Song[]) => {
   redis.set('songs/removed-list', JSON.stringify(songs));
-}
+};
 
 export const isCooltime = async (username: string) => {
   const songList = await getSongList();
@@ -43,12 +43,12 @@ export const isMaxSong = async () => {
   const songList = await getSongList();
 
   return songList.length >= 12;
-}
+};
 
 export const appendSong = async (song: Song) => {
   const songList = await getSongList();
   setSongList([...songList, song]);
-}
+};
 
 export const deleteSong = async (index: number = 0) => {
   const songList = await getSongList();

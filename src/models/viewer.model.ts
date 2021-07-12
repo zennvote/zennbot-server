@@ -1,9 +1,9 @@
-import { getSheetsInfo, SheetsInfo, updateSheetsInfo } from "../utils/sheets";
+import { getSheetsInfo, SheetsInfo, updateSheetsInfo } from '../utils/sheets';
 
-export enum RewardType { TicketPiece, Ticket };
+export enum RewardType { TicketPiece, Ticket }
 
 export default class Viewer {
-  constructor (
+  constructor(
     public id: string,
     public name: string,
     public isAdmin: boolean,
@@ -28,15 +28,13 @@ export const setReward = async (name: string, type: RewardType, value: number) =
   } else if (type === RewardType.TicketPiece) {
     updateSheetsInfo(name, { ticketPieces: value });
   }
-}
+};
 
-const getViewerFromSheetsInfo = (sheetsInfo: SheetsInfo): Viewer => {
-  return {
-    id: sheetsInfo.name,
-    name: sheetsInfo.name,
-    isAdmin: true,
-    ticket: sheetsInfo.tickets,
-    ticketPiece: sheetsInfo.ticketPieces,
-    prefix: sheetsInfo.prefix,
-  };
-}
+const getViewerFromSheetsInfo = (sheetsInfo: SheetsInfo): Viewer => ({
+  id: sheetsInfo.name,
+  name: sheetsInfo.name,
+  isAdmin: true,
+  ticket: sheetsInfo.tickets,
+  ticketPiece: sheetsInfo.ticketPieces,
+  prefix: sheetsInfo.prefix,
+});
