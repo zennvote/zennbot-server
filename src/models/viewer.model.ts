@@ -13,7 +13,7 @@ export default class Viewer {
   ) {}
 }
 
-export const findByName = async (name: string) => {
+export const findByName = async (name: string): Promise<Viewer | null> => {
   const sheetsInfo = await getSheetsInfo(name);
   if (sheetsInfo === null) {
     return null;
@@ -22,7 +22,7 @@ export const findByName = async (name: string) => {
   return getViewerFromSheetsInfo(sheetsInfo);
 };
 
-export const setReward = async (name: string, type: RewardType, value: number) => {
+export const setReward = async (name: string, type: RewardType, value: number): Promise<void> => {
   if (type === RewardType.Ticket) {
     updateSheetsInfo(name, { tickets: value });
   } else if (type === RewardType.TicketPiece) {

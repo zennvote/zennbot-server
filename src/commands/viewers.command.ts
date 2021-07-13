@@ -1,17 +1,17 @@
 import { getManagers } from '../models/managers.model';
-import Song, * as songModel from '../models/songs.model';
-import Viewer, * as viewerModel from '../models/viewer.model';
+import * as songModel from '../models/songs.model';
+import * as viewerModel from '../models/viewer.model';
 import { ChatEvent, sendMessage } from '../utils/chatbot';
 import { updateSheetsInfo } from '../utils/sheets';
 
-export const showSelf = async (payload: ChatEvent) => {
+export const showSelf = async (payload: ChatEvent): Promise<void> => {
   const name = payload.tags['display-name'];
   if (!name) {
     throw new Error('No tag on chat: display-name');
   }
   const viewer = await viewerModel.findByName(name);
   if (!viewer) {
-    return null;
+    return;
   }
   const { ticket, ticketPiece, prefix } = viewer;
   const message = `${prefix ? `[${prefix}] ` : ''}${name} 티켓 ${ticket}장 | 조각${ticketPiece}장 보유중`;
@@ -19,7 +19,7 @@ export const showSelf = async (payload: ChatEvent) => {
   sendMessage(payload.channel, message);
 };
 
-export const rollDice = (payload: ChatEvent) => {
+export const rollDice = (payload: ChatEvent): void => {
   if (payload.args.length !== 2) {
     sendMessage(payload.channel, '시작값과 끝값을 입력해주세요.');
     return;
@@ -30,7 +30,7 @@ export const rollDice = (payload: ChatEvent) => {
 
   const start = parseInt(startStr, 10);
   const end = parseInt(endStr, 10);
-  if (start === NaN || end === NaN) {
+  if (Number.isNaN(start) || Number.isNaN(end)) {
     sendMessage(payload.channel, '올바른 정수값을 입력해주세요.');
     return;
   }
@@ -39,7 +39,7 @@ export const rollDice = (payload: ChatEvent) => {
   sendMessage(payload.channel, `${name}님의 결과는 [ ${result} ]입니다!`);
 };
 
-export const requestSong = async (payload: ChatEvent) => {
+export const requestSong = async (payload: ChatEvent): Promise<void> => {
   if (payload.args.length === 0) {
     sendMessage(payload.channel, '곡명을 입력해주세요!');
     return;
@@ -63,7 +63,7 @@ export const requestSong = async (payload: ChatEvent) => {
 
   const viewer = await viewerModel.findByName(requestorName);
   if (!viewer) {
-    return null;
+    return;
   }
   const { ticket, ticketPiece } = viewer;
 
@@ -85,7 +85,7 @@ export const requestSong = async (payload: ChatEvent) => {
   sendMessage(payload.channel, message);
 };
 
-export const setRewards = async (payload: ChatEvent) => {
+export const setRewards = async (payload: ChatEvent): Promise<void> => {
   const managers = await getManagers();
   if (!managers.some((manager) => manager.username === payload.tags.username)) {
     sendMessage(payload.channel, '권한이 없습니다!');
@@ -97,7 +97,7 @@ export const setRewards = async (payload: ChatEvent) => {
   }
 
   const [inputType, name, inputPoint] = payload.args;
-  if (parseInt(inputPoint, 10) === NaN) {
+  if (Number.isNaN(inputPoint)) {
     sendMessage(payload.channel, '갯수는 숫자로 입력해주세요!');
     return;
   }
