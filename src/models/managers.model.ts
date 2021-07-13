@@ -1,4 +1,6 @@
-import { model, Schema, Model, Document } from 'mongoose';
+import {
+  model, Schema, Model, Document,
+} from 'mongoose';
 
 interface Manager extends Document {
   username: string;
@@ -10,7 +12,7 @@ const ManagerSchema: Schema = new Schema({
 
 const ManagerModel: Model<Manager> = model('manager', ManagerSchema);
 
-export const getManagers = async () => {
+export const getManagers = async (): Promise<Manager[]> => {
   const managers = await ManagerModel.find();
 
   return managers;
