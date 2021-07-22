@@ -11,6 +11,7 @@ module.exports = {
     'no-use-before-define': 0,
     'import/extensions': 0,
     'import/prefer-default-export': 0,
+    'max-len': ['error', { code: 160 }],
     '@typescript-eslint/no-shadow': 'error',
   },
   settings: {
