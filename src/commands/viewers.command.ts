@@ -65,7 +65,8 @@ export const requestSong = async (payload: ChatEvent): Promise<void> => {
   const isFreemode = await getFreemode();
   if (isFreemode) {
     await songModel.appendSong({ title, requestor, requestorName, requestType: songModel.RequestType.freemode });
-    sendMessage(payload.channel, `🔔 골든벨🔔 ${requestorName}님의 곡을 무료로 신청했어요!`)
+    sendMessage(payload.channel, `🔔 골든벨🔔 ${requestorName}님의 곡을 무료로 신청했어요!`);
+    return;
   }
 
   const viewer = await viewerModel.findByName(requestorName);
