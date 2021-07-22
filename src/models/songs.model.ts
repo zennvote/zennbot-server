@@ -1,15 +1,6 @@
-import { io } from "..";
-import { redis } from "..";
-import * as redisUtil from '../utils/redis';
+import { io, redis } from '..';
 
-export default class Song {
-  constructor (
-    public title: string,
-    public requestor: string,
-    public requestorName: string,
-    public requestType: RequestType,
-  ) {}
-}
+import * as redisUtil from '../utils/redis';
 
 export enum RequestType {
   ticket = '티켓',
@@ -17,9 +8,17 @@ export enum RequestType {
   freemode = '골든벨',
   manual = 'manual',
 }
+export default class Song {
+  constructor(
+    public title: string,
+    public requestor: string,
+    public requestorName: string,
+    public requestType: RequestType,
+  ) {}
+}
 
-export const getSongList = () => redisUtil.getSongList('songs/list');
-export const getRemovedSongList = () => redisUtil.getSongList('songs/removed-list');
+export const getSongList = (): Promise<Song[]> => redisUtil.getSongList('songs/list');
+export const getRemovedSongList = (): Promise<Song[]> => redisUtil.getSongList('songs/removed-list');
 
 const setSongList = (songs: Song[]) => {
   redis.set('songs/list', JSON.stringify(songs));
@@ -28,9 +27,9 @@ const setSongList = (songs: Song[]) => {
 
 const setRemovedSongList = (songs: Song[]) => {
   redis.set('songs/removed-list', JSON.stringify(songs));
-}
+};
 
-export const isCooltime = async (username: string) => {
+export const isCooltime = async (username: string): Promise<boolean> => {
   const songList = await getSongList();
   const removedSongList = await getRemovedSongList();
 
@@ -40,21 +39,21 @@ export const isCooltime = async (username: string) => {
     .some((song) => song.requestor === username);
 };
 
-export const isMaxSong = async () => {
+export const isMaxSong = async (): Promise<boolean> => {
   const songList = await getSongList();
 
   return songList.length >= 12;
-}
+};
 
-export const appendSong = async (song: Song) => {
+export const appendSong = async (song: Song): Promise<void> => {
   const songList = await getSongList();
   setSongList([...songList, song]);
-}
+};
 
 export const isFreemode = async () => await redisUtil.getFreemode();
 export const setFreemode = async (value: boolean) => redis.set('songs/freemode', value.toString());
 
-export const deleteSong = async (index: number = 0) => {
+export const deleteSong = async (index = 0): Promise<Song | null> => {
   const songList = await getSongList();
   const removedSongList = await getRemovedSongList();
 

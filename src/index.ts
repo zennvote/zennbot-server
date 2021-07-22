@@ -1,4 +1,4 @@
-import express, { Application, Request, Response } from 'express';
+import express, { Application } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import Redis from 'redis';
@@ -34,7 +34,7 @@ redis.set('songs/removed-list', '[]');
 redis.set('songs/list', '[]');
 redis.set('songs/freemode', 'false');
 
-io.on('connection', (socket: any) => {
+io.on('connection', (socket) => {
   socket.on('songs.update', async () => {
     io.emit('songs.updated', await getSongList());
   });
@@ -57,6 +57,6 @@ Promise.all(initializers)
 
     io.listen(4000, { transports: ['websocket'] });
   })
-.catch((error) => {
-  console.error(`Error occured: ${error?.message}`);
-});
+  .catch((error) => {
+    console.error(`Error occured: ${error?.message}`);
+  });

@@ -1,20 +1,21 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { createInterface } from 'readline';
-import { google, sheets_v4 } from 'googleapis';
-import { OAuth2Client } from 'google-auth-library';
+import { google, sheets_v4 as sheetsV4 } from 'googleapis';
+import { GaxiosPromise } from 'googleapis/build/src/apis/abusiveexperiencereport';
+import { OAuth2Client } from 'googleapis-common/node_modules/google-auth-library';
 
 export type SheetsInfo = { name: string, prefix?: string, tickets: number, ticketPieces: number };
-export type UpdateSheetsInfoDto = { tickets?: number,  ticketPieces?: number, prefix?: string };
+export type UpdateSheetsInfoDto = { tickets?: number, ticketPieces?: number, prefix?: string };
 
-let service: sheets_v4.Sheets;
-export const initializeSheetsService = async () => {
+let service: sheetsV4.Sheets;
+export const initializeSheetsService = async (): Promise<void> => {
   const credentialsPath = process.env.SHEETS_CREDENTIALS_PATH;
   if (!credentialsPath) {
     throw new Error('No env: SHEETS_CREDENTIALS_PATH');
   }
   const credentials = JSON.parse(readFileSync(credentialsPath, 'utf8'));
-  authorize(credentials).then((auth: any) => {
-    service = google.sheets({ auth: auth, version: 'v4' });
+  authorize(credentials).then((auth) => {
+    service = google.sheets({ auth, version: 'v4' });
   });
 };
 
@@ -41,27 +42,29 @@ export const getSheetsInfo = async (name: string): Promise<null | SheetsInfo> =>
   }
 
   return getSheetsInfoFromRow(row);
-}
+};
 
-export const updateSheetsInfo = async (name: string, dto: UpdateSheetsInfoDto) => {
+export const updateSheetsInfo = async (name: string, dto: UpdateSheetsInfoDto):
+  Promise<GaxiosPromise<sheetsV4.Schema$BatchUpdateValuesResponse> | null> => {
   const spreadsheetId = process.env.REWARDS_SHEETS_ID;
   const sheetIndex = await getViewerIndex(name);
   if (sheetIndex === undefined) {
     return null;
   }
   const index = sheetIndex + 6;
-  const rangeMap = { tickets: 'C', ticketPieces: 'D', prefix: 'E' } as any;
+  const rangeMap: { [key: string]: string } = { tickets: 'C', ticketPieces: 'D', prefix: 'E' };
 
   const data = Object.entries(dto).map(([key, value]) => ({
     range: `시트1!${rangeMap[key]}${index}`,
     values: [[`${value}`]],
   }));
 
-  return service.spreadsheets.values.batchUpdate({
+  const result = await service.spreadsheets.values.batchUpdate({
     spreadsheetId,
     requestBody: { data, valueInputOption: 'RAW' },
   });
-}
+  return result;
+};
 
 export const addSheetsInfo = async (name: string) => {
   const spreadsheetId = process.env.REWARDS_SHEETS_ID;
@@ -109,7 +112,7 @@ const getSheets = async () => {
   });
 
   return response.data.values;
-}
+};
 
 const getViewerIndex = async (name: string): Promise<number | undefined> => {
   const sheets = await getSheets();
@@ -123,25 +126,27 @@ const getViewerIndex = async (name: string): Promise<number | undefined> => {
     return undefined;
   }
   return result;
-}
+};
 
-const authorize = async (credentials: any): Promise<OAuth2Client> => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const authorize = async (credentials: any) => {
   const tokenPath = process.env.SHEETS_TOKEN_PATH;
   if (!tokenPath) {
     throw new Error('No env: SHEETS_TOKEN_PATH');
   }
 
   const { client_id: id, client_secret: secret, redirect_uris: uris } = credentials.installed;
-  const oAuth2Client: OAuth2Client = new google.auth.OAuth2(id, secret, uris[0]) as any;
+  const oAuth2Client = new google.auth.OAuth2(id, secret, uris[0]);
 
   try {
     const token = JSON.parse(readFileSync(tokenPath, 'utf8'));
     oAuth2Client.setCredentials(token);
     return oAuth2Client;
   } catch (e) {
-    return await getNewToken(oAuth2Client);
+    const newToken = await getNewToken(oAuth2Client);
+    return newToken;
   }
-}
+};
 
 const getNewToken = async (oAuth2Client: OAuth2Client): Promise<OAuth2Client> => {
   const tokenPath = process.env.SHEETS_TOKEN_PATH;
@@ -158,7 +163,7 @@ const getNewToken = async (oAuth2Client: OAuth2Client): Promise<OAuth2Client> =>
 
   console.log(`Auth URL: ${authUrl}`);
 
-  return await new Promise((resolve, reject) => {
+  const newToken = await new Promise<OAuth2Client>((resolve, reject) => {
     const rl = createInterface({
       input: process.stdin,
       output: process.stdout,
@@ -175,14 +180,18 @@ const getNewToken = async (oAuth2Client: OAuth2Client): Promise<OAuth2Client> =>
         oAuth2Client.setCredentials(token);
         writeFileSync(tokenPath, JSON.stringify(token));
 
-        resolve(oAuth2Client);
+        return resolve(oAuth2Client);
       });
     });
   });
-}
 
-const getSheetsInfoFromRow = (row: any[]): SheetsInfo => {
+  return newToken;
+};
+
+const getSheetsInfoFromRow = (row: string[]): SheetsInfo => {
   const [name, tickets, ticketPieces, prefix] = row;
 
-  return { name, prefix, tickets: parseInt(tickets, 10), ticketPieces: parseInt(ticketPieces, 10) };
-}
+  return {
+    name, prefix, tickets: parseInt(tickets, 10), ticketPieces: parseInt(ticketPieces, 10),
+  };
+};
