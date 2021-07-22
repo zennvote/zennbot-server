@@ -64,7 +64,9 @@ export const requestSong = async (payload: ChatEvent): Promise<void> => {
 
   const isFreemode = await getFreemode();
   if (isFreemode) {
-    await songModel.appendSong({ title, requestor, requestorName, requestType: songModel.RequestType.freemode });
+    await songModel.appendSong({
+      title, requestor, requestorName, requestType: songModel.RequestType.freemode,
+    });
     sendMessage(payload.channel, `🔔 골든벨🔔 ${requestorName}님의 곡을 무료로 신청했어요!`);
     return;
   }
@@ -127,7 +129,7 @@ export const setRewards = async (payload: ChatEvent): Promise<void> => {
 export const setPrefix = async (payload: ChatEvent) => {
   const managers = await getManagers();
   if (!managers.some((manager) => manager.username === payload.tags.username)) {
-    sendMessage(payload.channel, '권한이 없습니다!')
+    sendMessage(payload.channel, '권한이 없습니다!');
     return;
   }
 
@@ -135,7 +137,7 @@ export const setPrefix = async (payload: ChatEvent) => {
     sendMessage(payload.channel, '잘못된 명령어 형식이에요!');
     return;
   }
-  
+
   const [target, ...prefixWords] = payload.args;
   const prefix = prefixWords.join(' ');
 
@@ -146,7 +148,7 @@ export const setPrefix = async (payload: ChatEvent) => {
 export const createViewer = async (payload: ChatEvent) => {
   const managers = await getManagers();
   if (!managers.some((manager) => manager.username === payload.tags.username)) {
-    sendMessage(payload.channel, '권한이 없습니다!')
+    sendMessage(payload.channel, '권한이 없습니다!');
     return;
   }
 
@@ -156,7 +158,7 @@ export const createViewer = async (payload: ChatEvent) => {
   }
 
   const [name] = payload.args;
-  
+
   await viewerModel.create(name);
   sendMessage(payload.channel, `환영합니다 🎉 ${name}님이 신규 유저로 등록되었어요!`);
 };

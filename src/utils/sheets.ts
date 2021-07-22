@@ -79,8 +79,12 @@ export const addSheetsInfo = async (name: string) => {
     return null;
   }
 
-  const rangeMap = { name: 'B', tickets: 'C', ticketPieces: 'D', prefix: 'E' } as any;
-  const sheetsInfo = { name, tickets: 0, ticketPieces: 0, prefix: '' };
+  const rangeMap = {
+    name: 'B', tickets: 'C', ticketPieces: 'D', prefix: 'E',
+  } as any;
+  const sheetsInfo = {
+    name, tickets: 0, ticketPieces: 0, prefix: '',
+  };
   const data = Object.entries(sheetsInfo).map(([key, value]) => ({
     range: `시트1!${rangeMap[key]}${rowCount}`,
     values: [[`${value}`]],
@@ -94,7 +98,7 @@ export const addSheetsInfo = async (name: string) => {
     spreadsheetId,
     requestBody: { data, valueInputOption: 'RAW' },
   });
-}
+};
 
 const getSheets = async () => {
   const spreadsheetId = process.env.REWARDS_SHEETS_ID;

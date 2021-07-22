@@ -1,4 +1,6 @@
-import { addSheetsInfo, getSheetsInfo, SheetsInfo, updateSheetsInfo } from "../utils/sheets";
+import {
+  addSheetsInfo, getSheetsInfo, SheetsInfo, updateSheetsInfo,
+} from '../utils/sheets';
 
 export enum RewardType { TicketPiece, Ticket }
 
