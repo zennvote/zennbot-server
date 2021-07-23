@@ -55,7 +55,7 @@ Promise.all(initializers)
       console.log(`Connected successfully on port ${port}`);
     });
 
-    io.listen(4000, { transports: ['websocket'] });
+    io.listen(4000, { transports: ['polling'] });
   })
   .catch((error) => {
     console.error(`Error occured: ${error?.message}`);
