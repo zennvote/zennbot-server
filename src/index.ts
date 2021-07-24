@@ -6,6 +6,7 @@ import { Server } from 'socket.io';
 import mongoose from 'mongoose';
 
 import SongsRouter from './controllers/songs.controller';
+import FlagsRouter from './controllers/flags.controller';
 
 import { initializeSheetsService } from './utils/sheets';
 import { initializeChatbot } from './utils/chatbot';
@@ -21,6 +22,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/songs', SongsRouter);
+app.use('/api/flags', FlagsRouter);
 
 const initializers = [
   initializeSheetsService(),
