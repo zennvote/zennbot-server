@@ -1,6 +1,7 @@
 import { getManagers } from '../models/managers.model';
 import * as songModel from '../models/songs.model';
 import * as viewerModel from '../models/viewer.model';
+import * as flagsModel from '../models/flags.model';
 import { ChatEvent, sendMessage } from '../utils/chatbot';
 import { getFreemode } from '../utils/redis';
 import { updateSheetsInfo } from '../utils/sheets';
@@ -62,7 +63,7 @@ export const requestSong = async (payload: ChatEvent): Promise<void> => {
     return;
   }
 
-  const isFreemode = await getFreemode();
+  const isFreemode = await flagsModel.getFlag('freemode');
   if (isFreemode) {
     await songModel.appendSong({
       title, requestor, requestorName, requestType: songModel.RequestType.freemode,

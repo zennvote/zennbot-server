@@ -34,7 +34,6 @@ export const redis = Redis.createClient();
 
 redis.set('songs/removed-list', '[]');
 redis.set('songs/list', '[]');
-redis.set('songs/freemode', 'false');
 
 io.on('connection', (socket) => {
   socket.on('songs.update', async () => {

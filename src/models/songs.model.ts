@@ -50,9 +50,6 @@ export const appendSong = async (song: Song): Promise<void> => {
   setSongList([...songList, song]);
 };
 
-export const isFreemode = async () => await redisUtil.getFreemode();
-export const setFreemode = async (value: boolean) => redis.set('songs/freemode', value.toString());
-
 export const deleteSong = async (index = 0): Promise<Song | null> => {
   const songList = await getSongList();
   const removedSongList = await getRemovedSongList();
