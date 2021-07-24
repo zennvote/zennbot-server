@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/songs', SongsRouter);
+app.use('/api/songs', SongsRouter);
 
 const initializers = [
   initializeSheetsService(),
