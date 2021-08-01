@@ -1,5 +1,5 @@
-import { io, redis } from '..';
-
+import { redis } from '../infrastructure/redis';
+import { io } from '../infrastructure/socket';
 import * as redisUtil from '../utils/redis';
 
 export enum RequestType {

@@ -3,6 +3,12 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const config = {
+  app: {
+    port: parseInt(process.env.APP_PORT ?? '3000', 10),
+  },
+  socket: {
+    port: parseInt(process.env.SOCKET_PORT ?? '4000', 10),
+  },
   mongo: {
     uri: process.env.MONGO_URI,
   },

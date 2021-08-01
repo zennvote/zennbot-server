@@ -1,4 +1,4 @@
-import { redis } from '..';
+import { redis } from '../infrastructure/redis';
 import Song from '../models/songs.model';
 
 export const getSongList = (key: string): Promise<Song[]> => new Promise<Song[]>((resolve) => {
