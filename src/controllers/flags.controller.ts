@@ -6,7 +6,9 @@ const router = Router();
 router.get('/', async (req, res) => {
   const flags = await getFlags();
 
-  res.json({ ...flags });
+  const serialized: { [key: string]: boolean } = flags.reduce((obj, { key, value }) => ({ ...obj, [key]: value }), {});
+
+  res.json(serialized);
 });
 
 router.get('/:key', async (req, res) => {

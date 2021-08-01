@@ -20,10 +20,14 @@ export const getFlags = async (): Promise<Flag[]> => {
   return flags;
 };
 
-export const getFlag = async (key: string): Promise<Flag | null> => {
+export const getFlag = async (key: string): Promise<boolean | null> => {
   const flag = await FlagModel.findOne({ key });
 
-  return flag;
+  if (flag === null) {
+    return null;
+  }
+
+  return flag.value;
 };
 
 export const setFlag = async (key: string, value: boolean): Promise<number> => {
