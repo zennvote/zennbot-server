@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start:dev": "ts-node-dev ./src",
+    "build": "tsc",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint --fix src/**/*.ts"
   },
