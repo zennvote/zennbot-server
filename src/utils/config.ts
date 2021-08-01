@@ -24,7 +24,7 @@ export const config = {
     credentialPath: process.env.SHEETS_CREDENTIALS_PATH ?? './credentials.json',
     tokenPath: process.env.SHEETS_TOKEN_PATH ?? './token.json',
     scopes: process.env.SHEETS_SCOPES ?? 'https://www.googleapis.com/auth/spreadsheets',
-    rewardsSheetsId: process.env.REWARD_SHEETS_ID,
+    rewardsSheetsId: process.env.REWARDS_SHEETS_ID,
     rewardsSheetsRange: process.env.REWARDS_SHEETS_FULL_RANGE ?? '시트1!B6:E',
   },
 };
