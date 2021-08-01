@@ -1,9 +1,10 @@
 import express, { Application } from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import Redis from 'redis';
 import { Server } from 'socket.io';
 import mongoose from 'mongoose';
+
+import { config } from './utils/config';
 
 import SongsRouter from './controllers/songs.controller';
 import FlagsRouter from './controllers/flags.controller';
@@ -11,8 +12,6 @@ import FlagsRouter from './controllers/flags.controller';
 import { initializeSheetsService } from './utils/sheets';
 import { initializeChatbot } from './utils/chatbot';
 import { getSongList } from './models/songs.model';
-
-dotenv.config();
 
 const app: Application = express();
 const port = 3000;
@@ -42,9 +41,9 @@ io.on('connection', (socket) => {
   console.log(`connected: ${socket.id}`);
 });
 
-mongoose.connect(process.env.MONGOOSE_URI ?? '', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(config.mongo.uri ?? '', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-    console.log('connected to ', process.env.MONGOOSE_URL);
+    console.log('connected to ', config.mongo.uri);
   })
   .catch((err) => {
     console.error(err);

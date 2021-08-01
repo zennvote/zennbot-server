@@ -4,16 +4,16 @@ import { google, sheets_v4 as sheetsV4 } from 'googleapis';
 import { GaxiosPromise } from 'googleapis/build/src/apis/abusiveexperiencereport';
 import { OAuth2Client } from 'googleapis-common/node_modules/google-auth-library';
 
+import { config } from './config';
+
 export type SheetsInfo = { name: string, prefix?: string, tickets: number, ticketPieces: number };
 export type UpdateSheetsInfoDto = { tickets?: number, ticketPieces?: number, prefix?: string };
 
 let service: sheetsV4.Sheets;
 export const initializeSheetsService = async (): Promise<void> => {
-  const credentialsPath = process.env.SHEETS_CREDENTIALS_PATH;
-  if (!credentialsPath) {
-    throw new Error('No env: SHEETS_CREDENTIALS_PATH');
-  }
+  const credentialsPath = config.sheets.credentialPath;
   const credentials = JSON.parse(readFileSync(credentialsPath, 'utf8'));
+
   authorize(credentials).then((auth) => {
     service = google.sheets({ auth, version: 'v4' });
   });
@@ -46,7 +46,7 @@ export const getSheetsInfo = async (name: string): Promise<null | SheetsInfo> =>
 
 export const updateSheetsInfo = async (name: string, dto: UpdateSheetsInfoDto):
   Promise<GaxiosPromise<sheetsV4.Schema$BatchUpdateValuesResponse> | null> => {
-  const spreadsheetId = process.env.REWARDS_SHEETS_ID;
+  const spreadsheetId = config.sheets.rewardsSheetsId;
   const sheetIndex = await getViewerIndex(name);
   if (sheetIndex === undefined) {
     return null;
@@ -67,7 +67,7 @@ export const updateSheetsInfo = async (name: string, dto: UpdateSheetsInfoDto):
 };
 
 export const addSheetsInfo = async (name: string) => {
-  const spreadsheetId = process.env.REWARDS_SHEETS_ID;
+  const spreadsheetId = config.sheets.rewardsSheetsId;
 
   const { data: { sheets: sheet } } = await service.spreadsheets.get({ spreadsheetId });
   if (!sheet) {
@@ -101,13 +101,11 @@ export const addSheetsInfo = async (name: string) => {
 };
 
 const getSheets = async () => {
-  const spreadsheetId = process.env.REWARDS_SHEETS_ID;
-  const range = process.env.REWARDS_SHEETS_FULL_RANGE;
+  const spreadsheetId = config.sheets.rewardsSheetsId;
+  const range = config.sheets.rewardsSheetsRange;
+
   if (!spreadsheetId) {
     throw new Error('No env: REWARDS_SHEETS_ID');
-  }
-  if (!range) {
-    throw new Error('No env: REWARDS_SHEETS_FULL_RANGE');
   }
 
   const response = await service.spreadsheets.values.get({
@@ -134,10 +132,7 @@ const getViewerIndex = async (name: string): Promise<number | undefined> => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const authorize = async (credentials: any) => {
-  const tokenPath = process.env.SHEETS_TOKEN_PATH;
-  if (!tokenPath) {
-    throw new Error('No env: SHEETS_TOKEN_PATH');
-  }
+  const { tokenPath } = config.sheets;
 
   const { client_id: id, client_secret: secret, redirect_uris: uris } = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(id, secret, uris[0]);
@@ -153,17 +148,9 @@ const authorize = async (credentials: any) => {
 };
 
 const getNewToken = async (oAuth2Client: OAuth2Client): Promise<OAuth2Client> => {
-  const tokenPath = process.env.SHEETS_TOKEN_PATH;
-  const scope = process.env.SHEETS_SCOPES;
+  const { tokenPath, scopes } = config.sheets;
 
-  if (!tokenPath) {
-    throw new Error('No env: SHEETS_TOKEN_PATH');
-  }
-  if (!scope) {
-    throw new Error('No env: SHEETS_SCOPES');
-  }
-
-  const authUrl = oAuth2Client.generateAuthUrl({ access_type: 'offline', scope });
+  const authUrl = oAuth2Client.generateAuthUrl({ access_type: 'offline', scope: scopes });
 
   console.log(`Auth URL: ${authUrl}`);
 
