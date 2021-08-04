@@ -22,4 +22,4 @@ jobs:
           --region ap-northeast-2 \
           --application-name zennbot-deploy \
           --deployment-group-name zennbot-deploy-group \
-          --github-location repository="zennvote/zennvote-backend-v3",commitId="${{ github.sha }}"
+          --github-location repository="zennvote/zennbot-server",commitId="${{ github.sha }}"
