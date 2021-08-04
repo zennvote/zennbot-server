@@ -6,5 +6,5 @@ files:
     overwrite: yes
 hooks:
   AfterInstall:
-    - location: deploy.sh
+    - location: execute-deploy.sh
       timeout: 180
