@@ -21,4 +21,12 @@ module.exports = {
       },
     },
   },
+  overrides: [
+    {
+      files: ['*.spec.ts'],
+      rules: {
+        'no-unused-expressions': 0,
+      },
+    },
+  ],
 };
