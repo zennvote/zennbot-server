@@ -8,7 +8,8 @@
     "build": "tsc",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint --fix src/**/*.ts",
-    "test": "mocha -r ts-node/register src/**/*.spec.ts"
+    "test": "mocha",
+    "test:cov": "nyc mocha"
   },
   "devDependencies": {
     "@types/chai": "^4.2.21",
