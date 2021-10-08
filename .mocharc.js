@@ -1,4 +1,4 @@
 module.exports = {
   spec: ['src/**/*.spec.ts'],
-  'wetch-files': ['src/**/*.ts'],
+  'watch-files': ['src/**/*.ts'],
 }
