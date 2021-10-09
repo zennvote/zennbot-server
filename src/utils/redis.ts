@@ -1,5 +1,5 @@
 import { redis } from '../infrastructure/redis';
-import Song from '../models/songs.model';
+import Song from '../models/songs.model.regacy';
 
 export const getSongList = (key: string): Promise<Song[]> => new Promise<Song[]>((resolve) => {
   redis.get(key, (err, reply) => {

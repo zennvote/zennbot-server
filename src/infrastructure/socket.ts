@@ -1,6 +1,6 @@
 import { Server } from 'socket.io';
 
-import { getSongList } from '../models/songs.model';
+import { getSongList } from '../models/songs.model.regacy';
 
 export const io = new Server();
 

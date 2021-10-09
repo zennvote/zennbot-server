@@ -1,5 +1,5 @@
 import { getManagers } from '../models/managers.model';
-import * as songModel from '../models/songs.model';
+import * as songModel from '../models/songs.model.regacy';
 import * as viewerModel from '../models/viewer.model';
 import * as flagsModel from '../models/flags.model';
 import { ChatEvent, sendMessage } from '../utils/chatbot';
