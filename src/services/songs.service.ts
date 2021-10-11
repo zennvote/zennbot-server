@@ -1,8 +1,8 @@
-import Song from '../models/songs.model';
+import Song, * as SongsModel from '../models/songs.model';
 
-export const getSongs = async (): Promise<Song[]> => [];
+export const getSongs = (): Promise<Song[]> => SongsModel.getSongList();
 
-export const enqueueSong = async (): Promise<void> => {};
+export const enqueueSong = async (song: Song): Promise<void> => {};
 
 export const deleteSong = async (index = 0): Promise<void> => {};
 
