@@ -27,13 +27,13 @@ const getSongFromRedis = (key: string): Promise<Song[]> => new Promise<Song[]>((
 });
 
 export const getSongList = (): Promise<Song[]> => getSongFromRedis('songs/list');
-export const getRemovedSongList = (): Promise<Song[]> => getSongFromRedis('songs/removed-list');
+export const getDequeuedSongList = (): Promise<Song[]> => getSongFromRedis('songs/dequeued-list');
 
 export const setSongList = (songs: Song[]): void => {
   redis.set('songs/list', JSON.stringify(songs));
   io.emit('songs.updated', songs);
 };
 
-export const setRemovedSongList = (songs: Song[]): void => {
-  redis.set('songs/removed-list', JSON.stringify(songs));
+export const setDequeuedSongList = (songs: Song[]): void => {
+  redis.set('songs/dequeued-list', JSON.stringify(songs));
 };
