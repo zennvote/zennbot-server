@@ -9,7 +9,7 @@ import { getSongFixture } from '../models/songs.fixture';
 
 should();
 
-describe('함수 getSongs', () => {
+describe('songs.service.ts', () => {
   const sandbox = sinon.createSandbox();
   sinon.stub(redis);
 
@@ -21,16 +21,18 @@ describe('함수 getSongs', () => {
     sinon.restore();
   });
 
-  it('신청곡을 목록을 조회할 수 있어야 한다.', async () => {
-    // Arrange
-    const getSongListMock = sandbox.stub(SongModel, 'getSongList');
-    const expected = [getSongFixture(), getSongFixture()];
-    getSongListMock.resolves(expected);
+  describe('함수 getSongs', () => {
+    it('신청곡을 목록을 조회할 수 있어야 한다.', async () => {
+      // Arrange
+      const getSongListMock = sandbox.stub(SongModel, 'getSongList');
+      const expected = [getSongFixture(), getSongFixture()];
+      getSongListMock.resolves(expected);
 
-    // Act
-    const songs = await SongService.getSongs();
+      // Act
+      const songs = await SongService.getSongs();
 
-    // Assert
-    songs.should.deep.equals(expected);
+      // Assert
+      songs.should.deep.equals(expected);
+    });
   });
 });
