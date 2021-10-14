@@ -1,4 +1,4 @@
-import { should } from 'chai';
+import * as chai from 'chai';
 import sinon from 'sinon';
 
 import { redis } from '../infrastructure/redis';
@@ -7,7 +7,7 @@ import * as SongService from './songs.service';
 import * as SongModel from '../models/songs.model';
 import { getSongFixture } from '../models/songs.fixture';
 
-should();
+const should = chai.should();
 
 describe('songs.service.ts', () => {
   const sandbox = sinon.createSandbox();
@@ -49,6 +49,71 @@ describe('songs.service.ts', () => {
 
       // Assert
       setSongListMock.firstCall.args[0].should.deep.equal(expected);
+    });
+  });
+
+  describe('함수 dequeueSong', () => {
+    it('가장 먼저 신청된 신청곡을 삭제하고 dequeuedSongList에 넣어야 한다', async () => {
+      // Arrange
+      const getSongListMock = sandbox.stub(SongModel, 'getSongList');
+      const setSongListMock = sandbox.stub(SongModel, 'setSongList');
+      const getDequeuedSongListMock = sandbox.stub(SongModel, 'getDequeuedSongList');
+      const setDequeuedSongListMock = sandbox.stub(SongModel, 'setDequeuedSongList');
+      const songs = [getSongFixture(), getSongFixture(), getSongFixture()];
+      const dequeuedSongs = [getSongFixture(), getSongFixture()];
+      getSongListMock.resolves(songs);
+      getDequeuedSongListMock.resolves(dequeuedSongs);
+
+      // Act
+      const actually = await SongService.dequeueSong();
+
+      // Assert
+      const [dequeued, ...songListExpected] = songs;
+      const dequeuedSongListExpected = [...dequeuedSongs, dequeued];
+      should.exist(actually);
+      actually?.should.equal(dequeued);
+      setSongListMock.firstCall.args[0].should.deep.equal(songListExpected);
+      setDequeuedSongListMock.firstCall.args[0].should.deep.equal(dequeuedSongListExpected);
+    });
+
+    it('dequeuedSongList가 꽉 찼다면 (최대 4개 유지) 가장 먼저 들어온 신청곡을 dequeue해야 한다', async () => {
+      // Arrange
+      const getSongListMock = sandbox.stub(SongModel, 'getSongList');
+      const setSongListMock = sandbox.stub(SongModel, 'setSongList');
+      const getDequeuedSongListMock = sandbox.stub(SongModel, 'getDequeuedSongList');
+      const setDequeuedSongListMock = sandbox.stub(SongModel, 'setDequeuedSongList');
+      const songs = [getSongFixture(), getSongFixture(), getSongFixture()];
+      const dequeuedSongs = [getSongFixture(), getSongFixture(), getSongFixture(), getSongFixture()];
+      getSongListMock.resolves(songs);
+      getDequeuedSongListMock.resolves(dequeuedSongs);
+
+      // Act
+      const actually = await SongService.dequeueSong();
+
+      // Assert
+      const [dequeued, ...songListExpected] = songs;
+      const [, ...remainDequeuedSongs] = dequeuedSongs;
+      const dequeuedSongListExpected = [...remainDequeuedSongs, dequeued];
+      should.exist(actually);
+      actually?.should.equal(dequeued);
+      setSongListMock.firstCall.args[0].should.deep.equal(songListExpected);
+      setDequeuedSongListMock.firstCall.args[0].should.deep.equal(dequeuedSongListExpected);
+    });
+
+    it('songList가 비어있다면 null을 반환해야 한다.', async () => {
+      // Arrange
+      const getSongListMock = sandbox.stub(SongModel, 'getSongList');
+      const setSongListMock = sandbox.stub(SongModel, 'setSongList');
+      const setDequeuedSongListMock = sandbox.stub(SongModel, 'setDequeuedSongList');
+      getSongListMock.resolves([]);
+
+      // Act
+      const actually = await SongService.dequeueSong();
+
+      // Assert
+      should.equal(actually, null);
+      setSongListMock.callCount.should.equal(0);
+      setDequeuedSongListMock.callCount.should.equal(0);
     });
   });
 
