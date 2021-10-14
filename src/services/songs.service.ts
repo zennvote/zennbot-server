@@ -8,6 +8,23 @@ export const enqueueSong = async (song: Song): Promise<void> => {
   SongsModel.setSongList([...existing, song]);
 };
 
+export const dequeueSong = async (): Promise<Song | null> => {
+  const songs = await SongsModel.getSongList();
+
+  if (songs.length === 0) {
+    return null;
+  }
+
+  const [dequeued, ...remains] = songs;
+  const dequeuedSongs = await SongsModel.getDequeuedSongList();
+  const remainingDequeuedSongs = dequeuedSongs.length >= 4 ? dequeuedSongs.slice(1) : dequeuedSongs;
+
+  SongsModel.setSongList(remains);
+  SongsModel.setDequeuedSongList([...remainingDequeuedSongs, dequeued]);
+
+  return dequeued;
+};
+
 export const deleteSong = async (index = 0): Promise<boolean> => {
   if (index < 0) {
     return false;
