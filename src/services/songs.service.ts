@@ -42,6 +42,14 @@ export const deleteSong = async (index = 0): Promise<boolean> => {
   return true;
 };
 
-export const isCooltime = async (username: string): Promise<boolean> => true;
+export const isCooltime = async (username: string): Promise<boolean> => {
+  const songs = await SongsModel.getSongList();
+  const dequeuedSongs = await SongsModel.getDequeuedSongList();
+  const cooltimeQueue = [...dequeuedSongs, ...songs].slice(4);
+
+  const result = cooltimeQueue.some((song) => song.requestorName === username);
+
+  return result;
+};
 
 export const isQueueFull = async (): Promise<boolean> => true;
