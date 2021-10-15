@@ -214,4 +214,30 @@ describe('songs.service.ts', () => {
       actually.should.be.false;
     });
   });
+
+  describe('함수 isQueueFull', () => {
+    it('신청곡이 12개 이상이라면 true를 반환', async () => {
+      const getSongListMock = sandbox.stub(SongModel, 'getSongList');
+      const songs = new Array(12).fill(getSongFixture());
+      getSongListMock.resolves(songs);
+
+      // Act
+      const actually = await SongService.isQueueFull();
+
+      // Assert
+      actually.should.be.true;
+    });
+
+    it('신청곡이 12개 미만이라면 true를 반환', async () => {
+      const getSongListMock = sandbox.stub(SongModel, 'getSongList');
+      const songs = new Array(11).fill(getSongFixture());
+      getSongListMock.resolves(songs);
+
+      // Act
+      const actually = await SongService.isQueueFull();
+
+      // Assert
+      actually.should.be.false;
+    });
+  });
 });
