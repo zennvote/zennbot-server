@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/version', (req, res) => {
+app.get('/api/version', (req, res) => {
   const result = execSync('git rev-parse HEAD').toString().trim();
 
   res.end(result);
