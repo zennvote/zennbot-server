@@ -162,4 +162,54 @@ describe('songs.service.ts', () => {
       setSongListMock.called.should.be.false;
     });
   });
+
+  describe('함수 isCooltime', () => {
+    it('신청자가 신청한 곡이 최근 신청한 4곡 안에 있다면 true를 반환', async () => {
+      // Arrange
+      const getSongListMock = sandbox.stub(SongModel, 'getSongList');
+      const songs = [getSongFixture(), getSongFixture(), getSongFixture(), getSongFixture(), getSongFixture()];
+      const requestor = songs[1];
+      getSongListMock.resolves(songs);
+
+      // Act
+      const actually = await SongService.isCooltime(requestor.requestorName);
+
+      // Assert
+      actually.should.be.true;
+    });
+
+    it('신청자가 신청한 곡이 dequeuedSongList를 포함한 최근 신청한 4곡 안에 있다면 true를 반환', async () => {
+      // Arrange
+      const getSongListMock = sandbox.stub(SongModel, 'getSongList');
+      const getDequeuedSongList = sandbox.stub(SongModel, 'getDequeuedSongList');
+      const songs = [getSongFixture(), getSongFixture(), getSongFixture()];
+      const dequeuedSongs = [getSongFixture(), getSongFixture()];
+      const requestor = dequeuedSongs[1];
+      getSongListMock.resolves(songs);
+      getDequeuedSongList.resolves(dequeuedSongs);
+
+      // Act
+      const actually = await SongService.isCooltime(requestor.requestorName);
+
+      // Assert
+      actually.should.be.true;
+    });
+
+    it('신청자가 신청한 곡이 최근 신청한 4곡 안에 없다면 false를 반환', async () => {
+      // Arrange
+      const getSongListMock = sandbox.stub(SongModel, 'getSongList');
+      const getDequeuedSongList = sandbox.stub(SongModel, 'getDequeuedSongList');
+      const songs = [getSongFixture(), getSongFixture(), getSongFixture()];
+      const dequeuedSongs = [getSongFixture(), getSongFixture()];
+      const requestor = 'NOEXISTSINLIST';
+      getSongListMock.resolves(songs);
+      getDequeuedSongList.resolves(dequeuedSongs);
+
+      // Act
+      const actually = await SongService.isCooltime(requestor);
+
+      // Assert
+      actually.should.be.false;
+    });
+  });
 });
