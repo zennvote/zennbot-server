@@ -35,9 +35,9 @@ export const deleteSong = async (index = 0): Promise<boolean> => {
     return false;
   }
 
-  songs.splice(index, 1);
+  const deleted = [...songs.slice(0, index), ...songs.slice(index + 1)];
 
-  SongsModel.setSongList(songs);
+  SongsModel.setSongList(deleted);
 
   return true;
 };
