@@ -45,7 +45,7 @@ export const deleteSong = async (index = 0): Promise<boolean> => {
 export const isCooltime = async (username: string): Promise<boolean> => {
   const songs = await SongsModel.getSongList();
   const dequeuedSongs = await SongsModel.getDequeuedSongList();
-  const cooltimeQueue = [...dequeuedSongs, ...songs].slice(4);
+  const cooltimeQueue = [...dequeuedSongs, ...songs].slice().reverse().slice(0, 4);
 
   const result = cooltimeQueue.some((song) => song.requestorName === username);
 

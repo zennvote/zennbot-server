@@ -167,9 +167,11 @@ describe('songs.service.ts', () => {
     it('신청자가 신청한 곡이 최근 신청한 4곡 안에 있다면 true를 반환', async () => {
       // Arrange
       const getSongListMock = sandbox.stub(SongModel, 'getSongList');
+      const getDequeuedSongList = sandbox.stub(SongModel, 'getDequeuedSongList');
       const songs = [getSongFixture(), getSongFixture(), getSongFixture(), getSongFixture(), getSongFixture()];
       const requestor = songs[1];
       getSongListMock.resolves(songs);
+      getDequeuedSongList.resolves([]);
 
       // Act
       const actually = await SongService.isCooltime(requestor.requestorName);
