@@ -13,6 +13,7 @@ module.exports = {
     'import/prefer-default-export': 0,
     'max-len': ['error', { code: 160 }],
     '@typescript-eslint/no-shadow': 'error',
+    '@typescript-eslint/no-empty-function': 0,
   },
   settings: {
     'import/resolver': {

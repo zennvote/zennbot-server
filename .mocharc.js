@@ -1,4 +1,5 @@
 module.exports = {
+  require: 'ts-node/register',
   spec: ['src/**/*.spec.ts'],
-  'wetch-files': ['src/**/*.ts'],
+  'watch-files': ['src/**/*.ts'],
 }

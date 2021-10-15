@@ -1,6 +1,5 @@
 import { redis } from '../infrastructure/redis';
 import { io } from '../infrastructure/socket';
-import * as redisUtil from '../utils/redis';
 
 export enum RequestType {
   ticket = '티켓',
@@ -8,6 +7,7 @@ export enum RequestType {
   freemode = '골든벨',
   manual = 'manual',
 }
+
 export default class Song {
   constructor(
     public title: string,
@@ -17,51 +17,23 @@ export default class Song {
   ) {}
 }
 
-export const getSongList = (): Promise<Song[]> => redisUtil.getSongList('songs/list');
-export const getRemovedSongList = (): Promise<Song[]> => redisUtil.getSongList('songs/removed-list');
+const getSongFromRedis = (key: string): Promise<Song[]> => new Promise<Song[]>((resolve) => {
+  redis.get(key, (err, reply) => {
+    if (err || !reply) {
+      return resolve([]);
+    }
+    return resolve(JSON.parse(reply) as Song[]);
+  });
+});
 
-const setSongList = (songs: Song[]) => {
+export const getSongList = (): Promise<Song[]> => getSongFromRedis('songs/list');
+export const getDequeuedSongList = (): Promise<Song[]> => getSongFromRedis('songs/dequeued-list');
+
+export const setSongList = (songs: Song[]): void => {
   redis.set('songs/list', JSON.stringify(songs));
   io.emit('songs.updated', songs);
 };
 
-const setRemovedSongList = (songs: Song[]) => {
-  redis.set('songs/removed-list', JSON.stringify(songs));
-};
-
-export const isCooltime = async (username: string): Promise<boolean> => {
-  const songList = await getSongList();
-  const removedSongList = await getRemovedSongList();
-
-  return [...removedSongList, ...songList]
-    .reverse()
-    .slice(0, 4)
-    .some((song) => song.requestor === username);
-};
-
-export const isMaxSong = async (): Promise<boolean> => {
-  const songList = await getSongList();
-
-  return songList.length >= 12;
-};
-
-export const appendSong = async (song: Song): Promise<void> => {
-  const songList = await getSongList();
-  setSongList([...songList, song]);
-};
-
-export const deleteSong = async (index = 0): Promise<Song | null> => {
-  const songList = await getSongList();
-  const removedSongList = await getRemovedSongList();
-
-  const current = [...songList];
-  const deleted = current.splice(index, 1)[0];
-  if (!deleted) {
-    return null;
-  }
-
-  setRemovedSongList([...removedSongList, deleted]);
-  setSongList(current);
-
-  return deleted;
+export const setDequeuedSongList = (songs: Song[]): void => {
+  redis.set('songs/dequeued-list', JSON.stringify(songs));
 };

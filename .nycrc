@@ -1,7 +1,4 @@
 {
-  "require": [
-    "ts-node/register"
-  ],
   "include": [
     "src/**/*.ts"
   ],

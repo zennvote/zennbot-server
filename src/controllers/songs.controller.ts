@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { deleteSong } from '../models/songs.model';
+import { deleteSong } from '../models/songs.model.regacy';
 
 const router = Router();
 
