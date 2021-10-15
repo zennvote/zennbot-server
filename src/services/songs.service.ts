@@ -52,4 +52,4 @@ export const isCooltime = async (username: string): Promise<boolean> => {
   return result;
 };
 
-export const isQueueFull = async (): Promise<boolean> => true;
+export const isQueueFull = async (): Promise<boolean> => (await SongsModel.getSongList()).length >= 12;
