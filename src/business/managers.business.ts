@@ -1,5 +1,9 @@
 import { Manager } from '../models/managers.model';
 
-export const getManagers = async (): Promise<Manager> => {
-  throw new Error('Not implemented');
+import * as ManagersService from '../services/managers.service';
+
+export const getManagers = async (): Promise<Manager[]> => {
+  const managers = await ManagersService.getManagers();
+
+  return managers;
 };
