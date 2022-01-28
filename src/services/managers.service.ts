@@ -1,5 +1,7 @@
-import { Manager } from '../models/managers.model';
+import * as ManagerModel from '../models/managers.model';
 
-export const getManagers = (): Promise<Manager[]> => {
-  throw new Error('Not implemented');
+export const getManagers = async (): Promise<ManagerModel.Manager[]> => {
+  const managers = await ManagerModel.getManagers();
+
+  return managers;
 };
