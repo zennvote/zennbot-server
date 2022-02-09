@@ -81,6 +81,7 @@ export const addSheetsInfo = async (name: string) => {
 
   const rangeMap = {
     name: 'B', tickets: 'C', ticketPieces: 'D', prefix: 'E',
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any;
   const sheetsInfo = {
     name, tickets: 0, ticketPieces: 0, prefix: '',
@@ -100,7 +101,7 @@ export const addSheetsInfo = async (name: string) => {
   });
 };
 
-const getSheets = async () => {
+const getSheets = async (): Promise<string[][] | null | undefined> => {
   const spreadsheetId = config.sheets.rewardsSheetsId;
   const range = config.sheets.rewardsSheetsRange;
 

@@ -1,12 +1,11 @@
-import { getManagers } from '../models/managers.model';
+import * as ManagersService from '../services/managers.service';
 import * as songModel from '../models/songs.model.regacy';
 import * as viewerModel from '../models/viewer.model';
 import * as flagsModel from '../models/flags.model';
 import { ChatEvent, sendMessage } from '../utils/chatbot';
-import { getFreemode } from '../utils/redis';
 import { updateSheetsInfo } from '../utils/sheets';
 
-export const showRewards = async (payload: ChatEvent) => {
+export const showRewards = async (payload: ChatEvent): Promise<void> => {
   const name = payload.args.length ? payload.args[0] : payload.tags['display-name'];
   if (!name) {
     throw new Error('No tag on chat: display-name');
@@ -97,7 +96,7 @@ export const requestSong = async (payload: ChatEvent): Promise<void> => {
 };
 
 export const setRewards = async (payload: ChatEvent): Promise<void> => {
-  const managers = await getManagers();
+  const managers = await ManagersService.getManagers();
   if (!managers.some((manager) => manager.username === payload.tags.username)) {
     sendMessage(payload.channel, '권한이 없습니다!');
     return;
@@ -127,8 +126,8 @@ export const setRewards = async (payload: ChatEvent): Promise<void> => {
   sendMessage(payload.channel, `${name}님에게 ${inputType} ${point} 개를 지급하였습니다.`);
 };
 
-export const setPrefix = async (payload: ChatEvent) => {
-  const managers = await getManagers();
+export const setPrefix = async (payload: ChatEvent): Promise<void> => {
+  const managers = await ManagersService.getManagers();
   if (!managers.some((manager) => manager.username === payload.tags.username)) {
     sendMessage(payload.channel, '권한이 없습니다!');
     return;
@@ -146,8 +145,8 @@ export const setPrefix = async (payload: ChatEvent) => {
   sendMessage(payload.channel, `${target}님의 칭호를 [${prefix}]로 설정했어요!`);
 };
 
-export const createViewer = async (payload: ChatEvent) => {
-  const managers = await getManagers();
+export const createViewer = async (payload: ChatEvent): Promise<void> => {
+  const managers = await ManagersService.getManagers();
   if (!managers.some((manager) => manager.username === payload.tags.username)) {
     sendMessage(payload.channel, '권한이 없습니다!');
     return;

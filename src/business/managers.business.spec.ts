@@ -1,4 +1,3 @@
-import * as chai from 'chai';
 import sinon from 'sinon';
 
 import * as ManagersBusiness from './managers.business';
@@ -6,8 +5,6 @@ import * as ManagersBusiness from './managers.business';
 import { getManagerFixture } from '../models/managers.fixture';
 
 import * as ManagersService from '../services/managers.service';
-
-const should = chai.should();
 
 describe('managers.business.ts', () => {
   const sandbox = sinon.createSandbox();

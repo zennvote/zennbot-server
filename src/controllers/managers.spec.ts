@@ -1,15 +1,10 @@
-import * as chai from 'chai';
 import request from 'supertest';
 import sinon from 'sinon';
-
-import * as mongoose from 'mongoose';
 
 import { app } from '../infrastructure/app';
 import { getManagerFixture } from '../models/managers.fixture';
 
 import * as ManagersBusiness from '../business/managers.business';
-
-const should = chai.should();
 
 describe('managers.controller.ts', () => {
   const sandbox = sinon.createSandbox();
