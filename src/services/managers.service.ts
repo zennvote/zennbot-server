@@ -5,3 +5,11 @@ export const getManagers = async (): Promise<ManagerModel.Manager[]> => {
 
   return managers;
 };
+
+export const createManager = async (username: string): Promise<ManagerModel.Manager[]> => {
+  throw new Error('not implemented');
+};
+
+export const deleteManager = async (username: string): Promise<boolean> => {
+  throw new Error('not implemented');
+};
