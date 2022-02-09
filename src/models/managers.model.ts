@@ -12,10 +12,4 @@ const ManagerSchema: Schema = new Schema({
   username: { type: String, required: true },
 });
 
-const ManagerModel: Model<ManagerDocument> = model('manager', ManagerSchema);
-
-export const getManagers = async (): Promise<Manager[]> => {
-  const managers = await ManagerModel.find();
-
-  return managers;
-};
+export const ManagerModel: Model<ManagerDocument> = model('manager', ManagerSchema);
