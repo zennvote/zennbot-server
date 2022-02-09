@@ -6,7 +6,7 @@ export const getManagers = async (): Promise<ManagerModel.Manager[]> => {
   return managers;
 };
 
-export const createManager = async (username: string): Promise<ManagerModel.Manager[]> => {
+export const createManager = async (username: string): Promise<ManagerModel.Manager> => {
   throw new Error('not implemented');
 };
 

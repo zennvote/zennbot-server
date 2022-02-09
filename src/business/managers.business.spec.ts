@@ -38,8 +38,11 @@ describe('managers.business.ts', () => {
   describe('매니저 추가 기능', () => {
     it('새로운 매니저를 추가할 수 있어야 한다.', async () => {
       // Arrange
+      const getManagersMock = sandbox.stub(ManagersService, 'getManagers');
       const createManagerMock = sandbox.stub(ManagersService, 'createManager');
       const expected = getManagerFixture();
+      getManagersMock.resolves([]);
+      createManagerMock.resolves(expected);
 
       // Act
       const result = await ManagersBusiness.postManager(expected.username);
