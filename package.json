@@ -41,6 +41,7 @@
     "google-auth-library": "^7.3.0",
     "googleapis": "^77.0.0",
     "mongoose": "^5.13.2",
+    "neverthrow": "^4.3.1",
     "redis": "^3.1.2",
     "sinon": "^11.1.2",
     "socket.io": "^4.1.2",
