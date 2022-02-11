@@ -7,6 +7,7 @@ module.exports = {
   ],
   rules: {
     'no-shadow': 0,
+    'no-console': 0,
     'no-useless-constructor': 0,
     'no-use-before-define': 0,
     'import/extensions': 0,
@@ -14,6 +15,7 @@ module.exports = {
     'max-len': ['error', { code: 160 }],
     '@typescript-eslint/no-shadow': 'error',
     '@typescript-eslint/no-empty-function': 0,
+    '@typescript-eslint/explicit-module-boundary-types': 0,
   },
   settings: {
     'import/resolver': {

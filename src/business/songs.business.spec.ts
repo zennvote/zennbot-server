@@ -1,4 +1,3 @@
-import * as chai from 'chai';
 import sinon from 'sinon';
 import faker from 'faker';
 
@@ -7,8 +6,6 @@ import * as SongsBusiness from './songs.business';
 import * as SongsService from '../services/songs.service';
 import { getSongFixture } from '../models/songs.fixture';
 import Song, { RequestType } from '../models/songs.model';
-
-const should = chai.should();
 
 describe('songs.business.ts', () => {
   const sandbox = sinon.createSandbox();

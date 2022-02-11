@@ -10,7 +10,7 @@ export const getSongList = (key: string): Promise<Song[]> => new Promise<Song[]>
   });
 });
 
-export const getFreemode = () => new Promise<boolean>((resolve) => {
+export const getFreemode = (): Promise<boolean> => new Promise<boolean>((resolve) => {
   redis.get('songs/freemode', (err, reply) => {
     if (err || !reply) {
       return resolve(false);

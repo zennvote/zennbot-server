@@ -32,9 +32,9 @@ export const setReward = async (name: string, type: RewardType, value: number): 
   }
 };
 
-export const setPrefix = async (name: string, prefix: string) => await updateSheetsInfo(name, { prefix });
+export const setPrefix = async (name: string, prefix: string) => updateSheetsInfo(name, { prefix });
 
-export const create = async (name: string) => await addSheetsInfo(name);
+export const create = async (name: string) => addSheetsInfo(name);
 
 const getViewerFromSheetsInfo = (sheetsInfo: SheetsInfo): Viewer => ({
   id: sheetsInfo.name,

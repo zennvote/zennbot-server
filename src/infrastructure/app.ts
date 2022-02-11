@@ -5,6 +5,7 @@ import { execSync } from 'child_process';
 
 import SongsRouter from '../controllers/songs.controller';
 import FlagsRouter from '../controllers/flags.controller';
+import ManagersRouter from '../controllers/managers.controller';
 
 export const app: Application = express();
 
@@ -20,3 +21,4 @@ app.get('/api/version', (req, res) => {
 
 app.use('/api/songs', SongsRouter);
 app.use('/api/flags', FlagsRouter);
+app.use('/api/managers', ManagersRouter);
