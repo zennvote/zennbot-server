@@ -15,5 +15,5 @@ export const createManager = async (username: string): Promise<Manager> => {
 export const deleteManager = async (username: string): Promise<boolean> => {
   const result = await ManagerModel.deleteOne({ username });
 
-  return !!result.ok;
+  return (result.deletedCount ?? 0) > 0;
 };
